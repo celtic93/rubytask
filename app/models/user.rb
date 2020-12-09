@@ -7,5 +7,5 @@ class User < ApplicationRecord
   enum role: %i(admin worker client)
 
   validates :login, :fullname, :birthday, :address, :city,
-            :state, :country, :zip, presence: true
+            :state, :country, :zip, :role, presence: true
 end
