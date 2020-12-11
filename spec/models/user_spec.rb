@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  it { should define_enum_for(:role).with([:admin, :worker, :client]) }
+  it { should have_many :tasks }
+  it { should have_many(:work_tasks).class_name('Task') }
+
+  it { should define_enum_for(:role).with_values([:admin, :worker, :client]) }
 
   it { should validate_presence_of :login }
   it { should validate_presence_of :fullname }
