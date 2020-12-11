@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!, except: %i(index show)
-  before_action :check_client, except: %i(index)
+  before_action :check_client, except: %i(index show)
   before_action :find_task, only: %i(show)
 
   def index; end
@@ -24,7 +24,7 @@ class TasksController < ApplicationController
   end
 
   def check_client
-    redirect_to root_path, alert: 'You can not do this' unless current_user.client?
+    redirect_to root_path, alert: 'You can not do this' unless current_user&.client?
   end
 
   def find_task
