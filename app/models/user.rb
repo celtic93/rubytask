@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_many :comments, dependent: :destroy
   has_many :tasks
   has_many :work_tasks, class_name: 'Task'
 
