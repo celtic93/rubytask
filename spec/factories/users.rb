@@ -16,6 +16,10 @@ FactoryBot.define do
     zip { 'zip' }
     birthday { Date.today }
 
+    trait :admin do
+      role { 0 }
+    end
+
     trait :worker do
       role { 1 }
     end
