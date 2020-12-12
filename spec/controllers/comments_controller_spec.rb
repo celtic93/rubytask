@@ -5,6 +5,7 @@ RSpec.describe CommentsController, type: :controller do
   let(:client) { task.user }
   let(:worker) { create(:user, :worker) }
   let(:admin) { create(:user, :admin) }
+  let(:comment) { create(:comment, user: client, task: task) }
 
   describe 'POST #create' do
     context 'for client' do
@@ -99,6 +100,77 @@ RSpec.describe CommentsController, type: :controller do
       it 'redirects to sign up page' do
         post :create, params: { comment: attributes_for(:comment, :invalid), task_id: task }
 
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+  end
+
+  describe 'PATCH #update' do
+    context 'with valid attributes' do
+      before { login(client) }
+
+      it 'assigns the requested comment to @comment' do
+        patch :update, params: { id: comment, task_id: task, comment: attributes_for(:comment) }, format: :js
+        expect(assigns(:comment)).to eq comment
+      end
+
+      it 'changes comment attributes' do
+        patch :update, params: { id: comment, task_id: task, comment: { body: 'new comment body' } }, format: :js
+        comment.reload
+
+        expect(comment.body).to eq 'new comment body'
+      end
+
+      it 'renders update' do
+        patch :update, params: { id: comment, task_id: task, comment: attributes_for(:comment) }, format: :js
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'with invalid attributes' do
+      before do
+        login(client)
+        patch :update, params: { id: comment, task_id: task, comment: attributes_for(:comment, :invalid) }, format: :js
+      end
+
+      it 'does not change comment' do
+        comment.reload
+
+        expect(comment.body).to eq 'Comment Body Text'
+      end
+
+      it 'renders update' do
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'for not the author of the comment' do
+      before do
+        login(worker)
+        patch :update, params: { id: comment, task_id: task, comment: { body: 'body' } }
+      end
+
+      it 'does not change comment' do
+        comment.reload
+
+        expect(comment.body).to eq 'Comment Body Text'
+      end
+
+      it 'redirects to root path' do
+        expect(response).to redirect_to root_path
+      end  
+    end
+
+    context 'for unauthenticated user' do
+      before { patch :update, params: { id: comment, task_id: task, comment: { body: 'body' } } }
+
+      it 'does not change comment' do
+        comment.reload
+
+        expect(comment.body).to eq 'Comment Body Text'
+      end
+
+      it 'redirects to sign up page' do
         expect(response).to redirect_to new_user_session_path
       end
     end
