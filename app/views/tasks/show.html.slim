@@ -6,7 +6,9 @@ p= @task.user.fullname
   p= link_to 'Delete Task', task_path(@task), method: :delete
 
 - if current_user&.client? || current_user&.worker?
-  =render 'comments/form', task: @task
+  = render 'comments/form', task: @task
 
 .comments
-  =render @task.comments
+  - @task.comments.each do |comment|
+    div id=dom_id(comment)
+      = render comment
