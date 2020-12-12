@@ -39,7 +39,7 @@ feature 'User can edit task' do
     expect(page).to_not have_link 'Edit Task'
   end
 
-  scenario 'Unauthenticated user tryes to create task' do
+  scenario 'Unauthenticated user tryes to edit task' do
     visit task_path(task)
 
     expect(page).to_not have_link 'Edit Task'
