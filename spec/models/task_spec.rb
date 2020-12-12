@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Task, type: :model do
+  it { should have_many(:comments).dependent(:destroy) }
   it { should belong_to(:user) }
   it { should belong_to(:worker).class_name('User').optional(:true) }
 
