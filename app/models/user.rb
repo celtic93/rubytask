@@ -11,4 +11,8 @@ class User < ApplicationRecord
 
   validates :login, :fullname, :birthday, :address, :city,
             :state, :country, :zip, :role, presence: true
+
+  def author?(resource)
+    id == resource.user_id
+  end
 end

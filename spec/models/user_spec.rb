@@ -17,4 +17,16 @@ RSpec.describe User, type: :model do
   it { should validate_presence_of :zip }
   it { should validate_presence_of :password }
   it { should validate_presence_of :role }
+
+  let(:users) { create_list(:user, 2, :client) }
+  let(:user) { users[0] }
+  let(:other_user) { users[1] }
+  let(:task) { create(:task, user: user) }
+
+  describe '.author?' do
+    it 'verifies the authorship of the resource' do
+      expect(user).to be_author(task)
+      expect(other_user).to_not be_author(task)
+    end
+  end
 end
