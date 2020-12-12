@@ -1,3 +1,13 @@
 div id=dom_id(comment)
   p= comment.body
   p= comment.user.fullname
+
+  - if current_user&.author?(comment)
+    p= link_to 'Edit', '#', class: 'edit_comment_link', data: { comment_id: comment.id }
+
+  div id="#{dom_id(comment)}_errors"
+
+  = form_with model: [comment.task, comment], class: 'hidden', html: { id: dom_id(comment, :edit) }  do |f|
+    = f.text_area :body, value: comment.body
+
+    = f.submit

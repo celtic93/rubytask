@@ -1,0 +1,5 @@
+$('#comment_<%= @comment.id %>_errors').html('<%= render 'shared/errors', resource: @comment %>');
+
+<% unless @comment.errors.present? %>
+  $('#comment_<%= @comment.id %>').html('<%= j render @comment %>');
+<% end %>
