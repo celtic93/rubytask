@@ -3,3 +3,4 @@ p= @task.user.fullname
 
 - if current_user&.author?(@task)
   p= link_to 'Edit Task', edit_task_path(@task)
+  p= link_to 'Delete Task', task_path(@task), method: :delete
