@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe TasksController, type: :controller do  
-  let(:task) { create(:task) }
+  let!(:task) { create(:task) }
   let(:client) { task.user }
   let(:worker) { create(:user, :worker) }
 
@@ -235,6 +235,45 @@ RSpec.describe TasksController, type: :controller do
       end
 
       it 'redirects to sign up page' do
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    context 'for the author of the task' do
+      before { login(client) }
+
+      it 'deletes the task' do
+        expect { delete :destroy, params: { id: task } }.to change(Task, :count).by(-1)
+      end
+
+      it 'redirects to index' do
+        delete :destroy, params: { id: task }
+        expect(response).to redirect_to tasks_path
+      end
+    end
+
+    context 'for not the author of the task' do
+      before { login(worker) }
+
+      it "don't delete the task" do
+        expect { delete :destroy, params: { id: task } }.to_not change(Task, :count)
+      end
+
+      it 'redirects to main page' do
+        delete :destroy, params: { id: task }
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    context 'for unauthenticated user' do
+      it "don't delete the task" do
+        expect { delete :destroy, params: { id: task } }.to_not change(Task, :count)
+      end
+
+      it 'redirects to sign up page' do
+        delete :destroy, params: { id: task }
         expect(response).to redirect_to new_user_session_path
       end
     end
