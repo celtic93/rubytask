@@ -36,7 +36,7 @@ class TasksController < ApplicationController
   end
 
   def check_client
-    redirect_to root_path, alert: 'You can not do this' unless current_user&.client?
+    redirect_to root_path, alert: 'You can not do this' unless current_user.client?
   end
 
   def check_author
@@ -44,6 +44,6 @@ class TasksController < ApplicationController
   end
 
   def find_task
-    @task = Task.includes(:user).find(params[:id])
+    @task = Task.includes(:user, comments: :user).find(params[:id])
   end
 end

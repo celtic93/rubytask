@@ -1,0 +1,8 @@
+.comments-errors
+
+= form_with model: [task, Comment.new] do |f|
+    p
+      = f.label :body, 'Comment', for: dom_id(Comment.new)
+      = f.text_area :body, id: dom_id(Comment.new)
+      
+    p= f.submit

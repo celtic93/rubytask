@@ -1,0 +1,6 @@
+$(".comments-errors").html('<%= render 'shared/errors', resource: @comment %>');
+
+<% if @comment.persisted? %>
+  $(".comments").append('<%= j render @comment %>');
+  $("#new_comment").val('');
+<% end %>
