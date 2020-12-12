@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!, except: %i(index show)
   before_action :check_client, except: %i(index show)
-  before_action :find_task, only: %i(show edit)
+  before_action :find_task, except: %i(index new create)
   before_action :check_author, only: %i(edit)
 
   def index; end
@@ -19,6 +19,10 @@ class TasksController < ApplicationController
   end
 
   def edit; end
+
+  def update
+    redirect_to @task, notice: 'Your task succesfully updated.' if @task.update(task_params)
+  end
 
   private
 
