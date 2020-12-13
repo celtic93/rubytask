@@ -21,12 +21,20 @@ class UsersController < ApplicationController
   def edit; end
 
   def update
-    redirect_to @user, notice: 'User succesfully updated.' if @user.update(user_params)
+    if @user.update(user_params)
+      bypass_sign_in(@user) if @current_user_profile
+      redirect_to @user, notice: 'User succesfully updated.'
+    end
   end
 
   private
 
   def user_params
+    if params[:user][:password].blank? && params[:user][:password_confirmation].blank?
+      params[:user].delete(:password)
+      params[:user].delete(:password_confirmation)
+    end
+
     params.require(:user).permit(:email, :password, :password_confirmation, :login, :fullname,
                                  :birthday, :address, :city, :state, :country, :zip, :role)
   end
@@ -36,7 +44,9 @@ class UsersController < ApplicationController
   end
 
   def check_editor
-    unless current_user.admin? || current_user.id == @user.id
+    @current_user_profile = current_user.id == @user.id
+
+    unless current_user.admin? || @current_user_profile
       redirect_to root_path, alert: 'You can not do this'
     end
   end
