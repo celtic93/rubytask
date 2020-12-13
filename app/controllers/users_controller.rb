@@ -27,6 +27,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy
+    @user.destroy
+    redirect_to users_path, notice: 'User succesfully deleted.'
+  end
+
   private
 
   def user_params
