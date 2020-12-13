@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
-  let(:admin) { create(:user, :admin) }
-  let(:user) { create(:user, :client) }
-  let!(:user_email) { user.email }
+  let!(:admin) { create(:user, :admin) }
+  let!(:user) { create(:user, :client) }
+  let(:user_email) { user.email }
 
   describe 'GET #index' do
     it 'renders index view' do
@@ -292,6 +292,45 @@ RSpec.describe UsersController, type: :controller do
       end
 
       it 'redirects to sign up page' do
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    context 'for the admin' do
+      before { login(admin) }
+
+      it 'deletes the user' do
+        expect { delete :destroy, params: { id: user } }.to change(User, :count).by(-1)
+      end
+
+      it 'redirects to index' do
+        delete :destroy, params: { id: user }
+        expect(response).to redirect_to users_path
+      end
+    end
+
+    context 'for not the admin' do
+      before { login(user) }
+
+      it "don't delete the user" do
+        expect { delete :destroy, params: { id: admin } }.to_not change(User, :count)
+      end
+
+      it 'redirects to main page' do
+        delete :destroy, params: { id: admin }
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    context 'for unauthenticated user' do
+      it "don't delete the user" do
+        expect { delete :destroy, params: { id: user } }.to_not change(User, :count)
+      end
+
+      it 'redirects to sign up page' do
+        delete :destroy, params: { id: user }
         expect(response).to redirect_to new_user_session_path
       end
     end
