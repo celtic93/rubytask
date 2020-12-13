@@ -10,6 +10,6 @@ p= comment.user.fullname
 div id="#{dom_id(comment)}_errors"
 
 = form_with model: comment, class: 'hidden', html: { id: dom_id(comment, :edit) }  do |f|
-  = f.text_area :body, value: comment.body
+  = f.text_area :body
 
   = f.submit
