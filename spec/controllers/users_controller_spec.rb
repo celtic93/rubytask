@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe UsersController, type: :controller do
   let(:admin) { create(:user, :admin) }
   let(:user) { create(:user, :client) }
+  let!(:user_email) { user.email }
 
   describe 'GET #index' do
     it 'renders index view' do
@@ -119,6 +120,178 @@ RSpec.describe UsersController, type: :controller do
       it 'redirects to sign in page' do
         post :create, params: { user: attributes_for(:user) }
 
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+  end
+
+  describe 'GET #edit' do
+    context 'for authenticated admin' do
+      before do
+        login(admin)
+        get :edit, params: { id: user }
+      end
+
+      it 'assigns the requested user to @user' do
+        expect(assigns(:user)).to eq user
+      end
+
+      it 'renders edit view' do
+        expect(response).to render_template :edit
+      end
+    end
+
+    context 'for authenticated user with his profile' do
+      before do
+        login(user)
+        get :edit, params: { id: user }
+      end
+
+      it 'assigns the requested user to @user' do
+        expect(assigns(:user)).to eq user
+      end
+
+      it 'renders edit view' do
+        expect(response).to render_template :edit
+      end
+    end
+
+    context 'for authenticated user with other user profile' do
+      before do
+        login(user)
+        get :edit, params: { id: admin }
+      end
+
+      it 'do not assigns the requested user to @user' do
+        expect(assigns(:user)).to_not eq user
+      end
+
+      it 'redirects to root page' do
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    context 'for unauthenticated user' do
+      before { get :edit, params: { id: user } }
+
+      it 'do not assigns the requested user to @user' do
+        expect(assigns(:user)).to_not eq user
+      end
+
+      it 'redirects to sign up page' do
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+  end
+
+  describe 'PATCH #update' do
+    context 'for admin' do
+      context 'with valid attributes' do
+        before { login(admin) }
+
+        it 'assigns the requested user to @user' do
+          patch :update, params: { id: user, user: attributes_for(:user) }
+          expect(assigns(:user)).to eq user
+        end
+
+        it 'changes user attributes' do
+          patch :update, params: { id: user, user: {  email: 'aa@aaa.aa' } }
+          user.reload
+
+          expect(user.email).to eq 'aa@aaa.aa'
+        end
+
+        it 'redirects to show view' do
+          patch :update, params: { id: user, user: attributes_for(:user) }
+          expect(response).to redirect_to user
+        end
+      end
+
+      context 'with invalid attributes' do
+        before do
+          login(admin)
+          patch :update, params: { id: user, user: attributes_for(:user, :invalid) }, format: :js
+        end
+
+        it 'does not change user' do
+          user.reload
+
+          expect(user.email).to eq user_email
+        end
+
+        it 'renders update view' do
+          expect(response).to render_template :update
+        end
+      end
+    end
+
+    context 'for user and his profile' do
+      context 'with valid attributes' do
+        before { login(user) }
+
+        it 'assigns the requested user to @user' do
+          patch :update, params: { id: user, user: attributes_for(:user) }
+          expect(assigns(:user)).to eq user
+        end
+
+        it 'changes user attributes' do
+          patch :update, params: { id: user, user: { email: 'aa@aaa.aa' } }
+          user.reload
+
+          expect(user.email).to eq 'aa@aaa.aa'
+        end
+
+        it 'redirects to show view' do
+          patch :update, params: { id: user, user: attributes_for(:user) }
+          expect(response).to redirect_to user
+        end
+      end
+
+      context 'with invalid attributes' do
+        before do
+          login(user)
+          patch :update, params: { id: user, user: attributes_for(:user, :invalid) }, format: :js
+        end
+
+        it 'does not change user' do
+          user.reload
+
+          expect(user.email).to eq user_email
+        end
+
+        it 'renders update view' do
+          expect(response).to render_template :update
+        end
+      end
+    end
+
+    context 'for user and other profile' do
+      before do
+        login(user)
+        patch :update, params: { id: admin, user: { email: 'aa@aaa.aa' } }
+      end
+
+      it 'does not change user' do
+        user.reload
+
+        expect(user.email).to eq user_email
+      end
+
+      it 'redirects to main page' do
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    context 'for unauthenticated user' do
+      before { patch :update, params: { id: user, user: { email: 'aa@aaa.aa' } } }
+
+      it 'does not change user' do
+        user.reload
+
+        expect(user.email).to eq user_email
+      end
+
+      it 'redirects to sign up page' do
         expect(response).to redirect_to new_user_session_path
       end
     end
