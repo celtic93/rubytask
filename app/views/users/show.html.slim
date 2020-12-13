@@ -8,3 +8,6 @@ p= @user.state
 p= @user.country
 p= @user.zip
 p= @user.role
+
+- if current_user&.admin? || current_user&.id == @user.id
+  p= link_to 'Edit User', edit_user_path(@user)
