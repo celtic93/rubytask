@@ -4,7 +4,7 @@ class CommentsController < ApplicationController
   before_action :find_task, only: :create
   before_action :find_comment, only: %i(update destroy)
   before_action :check_author, only: :update
-  before_action :check_destroyer, only: :update
+  before_action :check_destroyer, only: :destroy
 
   def create
     @comment = @task.comments.create(comment_params.merge(user: current_user))
