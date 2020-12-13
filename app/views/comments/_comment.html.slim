@@ -4,9 +4,12 @@ p= comment.user.fullname
 - if current_user&.author?(comment)
   p= link_to 'Edit', '#', class: 'edit_comment_link', data: { comment_id: comment.id }
 
+- if current_user&.author?(comment) || current_user&.admin?
+  p= link_to 'Delete', comment_path(comment), method: :delete, remote: true
+
 div id="#{dom_id(comment)}_errors"
 
-= form_with model: [comment.task, comment], class: 'hidden', html: { id: dom_id(comment, :edit) }  do |f|
+= form_with model: comment, class: 'hidden', html: { id: dom_id(comment, :edit) }  do |f|
   = f.text_area :body, value: comment.body
 
   = f.submit

@@ -5,7 +5,7 @@ RSpec.describe CommentsController, type: :controller do
   let(:client) { task.user }
   let(:worker) { create(:user, :worker) }
   let(:admin) { create(:user, :admin) }
-  let(:comment) { create(:comment, user: client, task: task) }
+  let!(:comment) { create(:comment, user: client, task: task) }
 
   describe 'POST #create' do
     context 'for client' do
@@ -171,6 +171,58 @@ RSpec.describe CommentsController, type: :controller do
       end
 
       it 'redirects to sign up page' do
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    context 'for the author of the comment' do
+      before { login(client) }
+
+      it 'deletes the comment' do
+        expect { delete :destroy, params: { id: comment }, format: :js }.to change(task.comments, :count).by(-1)
+      end
+
+      it 'renders destroy' do
+        delete :destroy, params: { id: comment, format: :js }
+        expect(response).to render_template :destroy
+      end
+    end
+
+    context 'for the admin' do
+      before { login(admin) }
+
+      it 'deletes the comment' do
+        expect { delete :destroy, params: { id: comment }, format: :js }.to change(task.comments, :count).by(-1)
+      end
+
+      it 'renders destroy' do
+        delete :destroy, params: { id: comment, format: :js }
+        expect(response).to render_template :destroy
+      end
+    end
+
+    context 'for not the author of the comment' do
+      before { login(worker) }
+
+      it "don't delete the comment" do
+        expect { delete :destroy, params: { id: comment } }.to_not change(task.comments, :count)
+      end
+
+      it 'redirects to root path' do
+        delete :destroy, params: { id: comment }
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    context 'for unauthenticated user' do
+      it "don't delete the comment" do
+        expect { delete :destroy, params: { id: comment } }.to_not change(task.comments, :count)
+      end
+
+      it 'redirects to sign up page' do
+        delete :destroy, params: { id: comment }
         expect(response).to redirect_to new_user_session_path
       end
     end
