@@ -15,6 +15,7 @@ FactoryBot.define do
     country { 'country' }
     zip { 'zip' }
     birthday { Date.today }
+    role { 'client' }
 
     trait :admin do
       role { 0 }
@@ -26,6 +27,10 @@ FactoryBot.define do
 
     trait :client do
       role { 2 }
+    end
+
+    trait :invalid do
+      login { nil }
     end
   end
 end

@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!
-  before_action :check_admin, only: :create
+  before_action :authenticate_user!, except: %i(index show)
+  before_action :check_admin, except: %i(index show)
   before_action :find_user, except: %i(index new create)
 
   def index; end
@@ -24,7 +24,7 @@ class UsersController < ApplicationController
                                  :birthday, :address, :city, :state, :country, :zip, :role)
   end
 
-  def check_author
+  def check_admin
     redirect_to root_path, alert: 'You can not do this' unless current_user.admin?
   end
 
