@@ -32,7 +32,7 @@ class TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:body)
+    params.require(:task).permit(:body, :image)
   end
 
   def check_client
@@ -44,6 +44,6 @@ class TasksController < ApplicationController
   end
 
   def find_task
-    @task = Task.includes(:user, comments: :user).find(params[:id])
+    @task = Task.with_attached_image.includes(:user, comments: :user).find(params[:id])
   end
 end

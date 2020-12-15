@@ -1,5 +1,6 @@
 p= comment.body
 p= comment.user.fullname
+= image_tag(comment.image)
 
 - if current_user&.author?(comment)
   p= link_to 'Edit', '#', class: 'edit_comment_link', data: { comment_id: comment.id }
@@ -11,5 +12,8 @@ div id="#{dom_id(comment)}_errors"
 
 = form_with model: comment, class: 'hidden', html: { id: dom_id(comment, :edit) }  do |f|
   = f.text_area :body
+
+  = f.label :image
+  = f.file_field :image, accept: 'image/png,image/jpg,image/jpeg'
 
   = f.submit
