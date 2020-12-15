@@ -4,5 +4,8 @@
     p
       = f.label :body, 'Comment', for: dom_id(Comment.new)
       = f.text_area :body, id: dom_id(Comment.new)
+    p
+      = f.label :image
+      = f.file_field :image, accept: 'image/png,image/jpg,image/jpeg'
       
     p= f.submit

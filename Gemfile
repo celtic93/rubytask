@@ -30,6 +30,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
 
 gem 'devise'
 gem 'slim-rails'
+gem 'active_storage_validations'
 
 group :development, :test do
   gem 'pry'

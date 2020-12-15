@@ -25,11 +25,11 @@ class CommentsController < ApplicationController
   end
 
   def find_task
-    @task = Task.find(params[:task_id])
+    @task = Task.with_attached_image.find(params[:task_id])
   end
 
   def find_comment
-    @comment = Comment.find(params[:id])
+    @comment = Comment.with_attached_image.find(params[:id])
   end
 
   def check_author
@@ -43,6 +43,6 @@ class CommentsController < ApplicationController
   end
 
   def comment_params
-    params.require(:comment).permit(:body)
+    params.require(:comment).permit(:body, :image)
   end
 end

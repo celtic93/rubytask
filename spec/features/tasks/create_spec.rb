@@ -26,6 +26,15 @@ feature 'User can create task' do
 
       expect(page).to have_content "Body can't be blank"
     end
+
+    scenario 'creates task with image' do
+      fill_in 'task_body', with: 'text text text'
+      attach_file 'Image', "#{Rails.root}/public/apple-touch-icon.png"
+
+      click_on 'Create Task'
+
+      expect(page).to have_css("img")
+    end
   end
 
   scenario 'Authenticated worker tryes to create task' do
