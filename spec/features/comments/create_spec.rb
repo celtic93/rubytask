@@ -25,6 +25,15 @@ feature 'User can create comments' do
       click_on 'Create Comment'
       expect(page).to have_content "Body can't be blank"
     end
+
+    scenario 'creates comment with image', js: true do
+      fill_in 'Comment', with: 'Comment text'
+      attach_file 'Image', "#{Rails.root}/public/apple-touch-icon.png"
+
+      click_on 'Create Comment'
+
+      expect(page).to have_css("img")
+    end
   end
 
   scenario 'Authenticated admin tryes to comment a task' do

@@ -52,6 +52,21 @@ feature 'User can edit comment' do
         expect(page).to_not have_link 'Edit'
       end
     end
+
+    scenario 'add image to comment', js: true do
+      sign_in(client)
+      visit task_path(task)
+
+      within '.comments' do
+        expect(page).to_not have_css("img")
+        click_on 'Edit'
+        
+        attach_file 'Image', "#{Rails.root}/public/apple-touch-icon.png"
+        click_on 'Update Comment'
+
+        expect(page).to have_css("img")
+      end
+    end
   end
 
   scenario 'Unauthenticated user tryes to edit comment' do

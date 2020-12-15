@@ -1,6 +1,7 @@
 p= @task.body
 p= @task.user.fullname
-= image_tag(@task.image)
+- if @task.image.attached?
+  = image_tag(@task.image)
 
 - if current_user&.author?(@task)
   p= link_to 'Edit Task', edit_task_path(@task)

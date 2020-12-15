@@ -10,10 +10,11 @@ feature 'User can edit task' do
       sign_in(client)
 
       visit task_path(task)
-      click_on 'Edit Task'
     end
 
     scenario 'edits task' do
+      click_on 'Edit Task'
+
       expect(page).to have_content 'Body Text'
       expect(page).to_not have_content 'New Task'
 
@@ -25,10 +26,22 @@ feature 'User can edit task' do
     end
 
     scenario 'edits task with errors', js: true do
+      click_on 'Edit Task'
+      
       fill_in 'task_body', with: ''
       click_on 'Update Task'
 
       expect(page).to have_content "Body can't be blank"
+    end
+
+    scenario 'added image to task' do
+      expect(page).to_not have_css("img")
+      click_on 'Edit Task'
+
+      attach_file 'Image', "#{Rails.root}/public/apple-touch-icon.png"
+      click_on 'Update Task'
+
+      expect(page).to have_css("img")
     end
   end
 

@@ -1,6 +1,7 @@
 p= comment.body
 p= comment.user.fullname
-= image_tag(comment.image)
+- if comment.image.attached?
+  = image_tag(comment.image)
 
 - if current_user&.author?(comment)
   p= link_to 'Edit', '#', class: 'edit_comment_link', data: { comment_id: comment.id }
