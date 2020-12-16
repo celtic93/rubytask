@@ -9,6 +9,8 @@ p= @user.country
 p= @user.zip
 p= @user.role
 
+= render 'shared/map', latitude: @user.latitude, longitude: @user.longitude
+
 - if current_user&.admin? || current_user&.id == @user.id
   p= link_to 'Edit User', edit_user_path(@user)
 
