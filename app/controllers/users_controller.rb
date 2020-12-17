@@ -4,7 +4,9 @@ class UsersController < ApplicationController
   before_action :find_user, except: %i(index new create)
   before_action :check_editor, only: %i(edit update)
 
-  def index; end
+  def index
+    @users = User.all
+  end
 
   def show; end
 
