@@ -1,0 +1,5 @@
+div
+  -if task.image.attached?
+    = image_tag task.image, size: '50x50'
+  p= link_to truncate(task.body, length: 160, separator: ' '), task_path(task)
+  p= task.user.fullname
