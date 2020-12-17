@@ -6,8 +6,13 @@ RSpec.describe UsersController, type: :controller do
   let(:user_email) { user.email }
 
   describe 'GET #index' do
+    before { get :index }
+
+    it 'assigns all users to @users' do
+      expect(assigns(:users)).to eq [admin, user]
+    end
+
     it 'renders index view' do
-      get :index
       expect(response).to render_template :index
     end
   end
