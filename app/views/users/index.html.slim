@@ -2,3 +2,6 @@
   p= link_to 'Create User', new_user_path
 
 h1 Users
+
+- @users.each do |user|
+  p= link_to user.fullname, user_path(user)
