@@ -1,13 +1,19 @@
 require 'rails_helper'
 
-RSpec.describe TasksController, type: :controller do  
-  let!(:task) { create(:task) }
+RSpec.describe TasksController, type: :controller do
+  let!(:tasks) { create_list(:task, 2)}
+  let(:task) { tasks[0] }
   let(:client) { task.user }
   let(:worker) { create(:user, :worker) }
 
   describe 'GET #index' do
+    before { get :index }
+
+    it 'assigns all tasks to @tasks' do
+      expect(assigns(:tasks)).to eq tasks
+    end
+
     it 'renders index view' do
-      get :index
       expect(response).to render_template :index
     end
   end

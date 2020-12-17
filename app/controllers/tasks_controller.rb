@@ -4,7 +4,9 @@ class TasksController < ApplicationController
   before_action :find_task, except: %i(index new create)
   before_action :check_author, only: %i(edit destroy)
 
-  def index; end
+  def index
+    @tasks = Task.with_attached_image.includes(:user).all
+  end
 
   def show; end
 
