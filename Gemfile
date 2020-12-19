@@ -32,6 +32,7 @@ gem 'devise'
 gem 'slim-rails'
 gem 'active_storage_validations'
 gem 'geocoder'
+gem 'pg_search'
 
 group :development, :test do
   gem 'pry'
