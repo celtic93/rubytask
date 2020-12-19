@@ -5,3 +5,7 @@
   p= link_to 'Log out', destroy_user_session_path, method: :delete
 - else
   p= link_to 'Log In', new_user_session_path
+
+= form_tag search_path, method: :get, role: 'search' do
+  = text_field_tag :query, params[:query]
+  = submit_tag 'Search', name: nil
