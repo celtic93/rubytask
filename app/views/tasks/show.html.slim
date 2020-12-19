@@ -1,4 +1,4 @@
-p= @task.body
+p= raw RedCloth.new(sanitize(@task.body), [:filter_html] ).to_html
 p= @task.user.fullname
 - if @task.image.attached?
   = image_tag(@task.image)

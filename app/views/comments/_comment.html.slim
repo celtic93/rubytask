@@ -1,4 +1,4 @@
-p= comment.body
+p= raw RedCloth.new(sanitize(comment.body), [:filter_html] ).to_html
 p= comment.user.fullname
 - if comment.image.attached?
   = image_tag(comment.image)
