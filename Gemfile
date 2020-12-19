@@ -33,6 +33,7 @@ gem 'slim-rails'
 gem 'active_storage_validations'
 gem 'geocoder'
 gem 'pg_search'
+gem 'RedCloth'
 
 group :development, :test do
   gem 'pry'
