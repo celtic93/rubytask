@@ -1,0 +1,3 @@
+- @work_requests.each do |work_request|
+  p= link_to truncate(work_request.task.body, length: 160, separator: ' '), task_path(work_request.task)
+  p= work_request.status

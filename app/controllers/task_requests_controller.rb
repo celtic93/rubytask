@@ -1,12 +1,16 @@
 class TaskRequestsController < ApplicationController
   before_action :authenticate_user!
-  before_action :check_worker, only: :create
+  before_action :check_worker, only: %i(create my_works)
   before_action :find_task, only: :create
 
   def create
     @task_request = TaskRequest.create(user: @task.user,
                                        task: @task,
                                        worker: current_user)
+  end
+
+  def my_works
+    @work_requests = current_user.work_requests.includes(:task)
   end
 
   private

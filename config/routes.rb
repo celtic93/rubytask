@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :task_requests, only: :create
 
   get '/my_tasks', to: 'tasks#my_tasks'
+  get '/my_works', to: 'task_requests#my_works'
   get '/search', to: 'search_results#index'
   
   root to: "tasks#index"
