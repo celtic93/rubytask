@@ -1,5 +1,9 @@
 - if current_user&.client?
   p= link_to 'Create Task', new_task_path
+  p= link_to 'My Tasks', my_tasks_path
+
+- if current_user&.worker?
+  p= link_to 'My Works', my_works_path
 
 h1 Tasks
 
