@@ -1,11 +1,23 @@
 - @tasks.each do |task|
   p= link_to truncate(task.body, length: 160, separator: ' '), task_path(task)
 
-  .div
+  div id= dom_id(task, :requests)
     - if task.worker
       p Task in work by #{link_to task.worker.fullname, user_path(task.worker)}
-    - elsif task.work_requestors.any?
-      - task.work_requestors.each do |worker|
-        p= link_to worker.fullname, user_path(worker)
+    - elsif task.task_requests.any?
+      - task.task_requests.each do |task_request|
+        p= link_to task_request.worker.fullname, user_path(task_request.worker)
+        div id= dom_id(task_request, :status)
+          - if task_request.pending?
+            p= link_to 'Accept', accept_task_requests_path(task_id: task.id,
+                                                           worker_id: task_request.worker.id),
+                                 method: :patch,
+                                 remote: true
+            p= link_to 'Reject', reject_task_requests_path(task_id: task.id,
+                                                           worker_id: task_request.worker.id),
+                                 method: :patch,
+                                 remote: true
+          - elsif task_request.rejected?
+            p Rejected
     - else
       p= 'There are no requests for the task'

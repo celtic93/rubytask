@@ -7,7 +7,12 @@ Rails.application.routes.draw do
     resources :comments, shallow: true, only: %i(create update destroy)
   end
 
-  resources :task_requests, only: :create
+  resources :task_requests, only: :create do
+    collection do
+      patch 'accept'
+      patch 'reject'
+    end
+  end
 
   get '/my_tasks', to: 'tasks#my_tasks'
   get '/my_works', to: 'task_requests#my_works'

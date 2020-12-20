@@ -32,7 +32,7 @@ class TasksController < ApplicationController
   end
 
   def my_tasks
-    @tasks = current_user.tasks.includes(:work_requestors, :worker)
+    @tasks = current_user.tasks.includes(:worker, task_requests: :worker)
   end
 
   private
