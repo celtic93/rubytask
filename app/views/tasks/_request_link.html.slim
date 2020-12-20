@@ -1,0 +1,5 @@
+.task-request
+  - if task.requested_by?(current_user)
+    p= 'You have already requested this task'
+  - else
+    p= link_to 'Request', task_requests_path(id: task.id), method: :post, remote: true

@@ -7,6 +7,8 @@ Rails.application.routes.draw do
     resources :comments, shallow: true, only: %i(create update destroy)
   end
 
+  resources :task_requests, only: :create
+
   get '/search', to: 'search_results#index'
   
   root to: "tasks#index"

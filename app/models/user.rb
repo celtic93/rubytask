@@ -1,7 +1,9 @@
 class User < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :tasks
-  has_many :work_tasks, class_name: 'Task'
+  has_many :works, class_name: 'Task', foreign_key: :worker_id
+  has_many :task_requests
+  has_many :work_requests, class_name: 'TaskRequest', foreign_key: :worker_id
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

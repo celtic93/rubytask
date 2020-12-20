@@ -7,6 +7,9 @@ p= @task.user.fullname
   p= link_to 'Edit Task', edit_task_path(@task)
   p= link_to 'Delete Task', task_path(@task), method: :delete
 
+- if current_user&.worker?
+  = render 'tasks/request_link', task: @task
+
 - if current_user&.client? || current_user&.worker?
   = render 'comments/form', task: @task
 

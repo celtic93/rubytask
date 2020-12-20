@@ -46,6 +46,7 @@ class TasksController < ApplicationController
   end
 
   def find_task
-    @task = Task.with_attached_image.includes(:user, comments: :user).find(params[:id])
+    @task = Task.with_attached_image.includes(:user, :work_requestors,
+                                              comments: :user).find(params[:id])
   end
 end
