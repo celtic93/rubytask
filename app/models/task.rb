@@ -15,4 +15,8 @@ class Task < ApplicationRecord
 
   pg_search_scope :search_tasks, against: :body,
                                  associated_against: { user: [:address, :fullname, :login] }
+
+  def requested_by?(user)
+    work_requestor_ids.include?(user.id)
+  end
 end
