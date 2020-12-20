@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_16_174543) do
+ActiveRecord::Schema.define(version: 2020_12_20_105228) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "body"
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+  end
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -44,6 +54,34 @@ ActiveRecord::Schema.define(version: 2020_12_16_174543) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["task_id"], name: "index_comments_on_task_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "taggings", force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "task_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tag_id"], name: "index_taggings_on_tag_id"
+    t.index ["task_id"], name: "index_taggings_on_task_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "task_requests", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "task_id"
+    t.bigint "worker_id"
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["task_id"], name: "index_task_requests_on_task_id"
+    t.index ["user_id", "task_id", "worker_id"], name: "index_task_requests_on_user_id_and_task_id_and_worker_id", unique: true
+    t.index ["user_id"], name: "index_task_requests_on_user_id"
+    t.index ["worker_id"], name: "index_task_requests_on_worker_id"
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -80,5 +118,18 @@ ActiveRecord::Schema.define(version: 2020_12_16_174543) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "work_requests", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "task_id"
+    t.bigint "worker_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["task_id"], name: "index_work_requests_on_task_id"
+    t.index ["user_id"], name: "index_work_requests_on_user_id"
+    t.index ["worker_id"], name: "index_work_requests_on_worker_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "taggings", "tags"
+  add_foreign_key "taggings", "tasks"
 end

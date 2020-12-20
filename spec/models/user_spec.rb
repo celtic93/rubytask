@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   it { should have_many(:comments).dependent(:destroy) }
   it { should have_many :tasks }
-  it { should have_many(:work_tasks).class_name('Task') }
+  it { should have_many(:works).class_name('Task').with_foreign_key('worker_id') }
 
   it { should define_enum_for(:role).with_values([:admin, :worker, :client]) }
 

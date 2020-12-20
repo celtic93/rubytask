@@ -2,6 +2,8 @@ class Task < ApplicationRecord
   include PgSearch::Model
 
   has_many :comments, dependent: :destroy
+  has_many :task_requests, dependent: :destroy
+  has_many :work_requestors, through: :task_requests, source: :worker
   belongs_to :user
   belongs_to :worker, class_name: 'User', optional: true
 
