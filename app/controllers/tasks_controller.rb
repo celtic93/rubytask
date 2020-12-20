@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!, except: %i(index show)
   before_action :check_client, except: %i(index show)
-  before_action :find_task, except: %i(index new create)
+  before_action :find_task, except: %i(index new create my_tasks)
   before_action :check_author, only: %i(edit destroy)
 
   def index
@@ -29,6 +29,10 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy
     redirect_to tasks_path, notice: 'Your task succesfully deleted.'
+  end
+
+  def my_tasks
+    @tasks = current_user.tasks.includes(:work_requestors, :worker)
   end
 
   private
